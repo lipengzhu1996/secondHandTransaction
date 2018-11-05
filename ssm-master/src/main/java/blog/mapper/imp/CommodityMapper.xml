@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="blog.mapper.CommodityMapper">
+    <resultMap id="Commodity" type="blog.dao.Commodity">
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="shopname" property="shopname" jdbcType="VARCHAR" />
+        <result column="guige" property="guige" jdbcType="VARCHAR" />
+        <result column="jiage" property="jiage" jdbcType="INTEGER" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="tupian" property="tupian" jdbcType="VARCHAR" />
+        <result column="fenlei" property="fenlei" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="Commoditynew" type="blog.dto.output.Commoditynew">
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="shopname" property="shopname" jdbcType="VARCHAR" />
+        <result column="guige" property="guige" jdbcType="VARCHAR" />
+        <result column="jiage" property="jiage" jdbcType="INTEGER" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="tupian" property="tupian" jdbcType="VARCHAR" />
+        <result column="fenlei" property="fenlei" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <select id="selectCommodity" resultType="blog.dto.output.Commoditynew">
+
+        select * from b_commodity
+        where 1=1
+
+         <if test="shopname != null" >
+         AND shopname  like CONCAT(CONCAT('%',#{shopname,jdbcType=VARCHAR}),'%')
+         </if>
+        <if test="fenlei != null" >
+            AND fenlei  like CONCAT(CONCAT('%',#{fenlei,jdbcType=VARCHAR}),'%')
+        </if>
+
+    </select>
+
+    <select id="selectoederAction" resultType="blog.dto.output.Commoditynew"
+    >
+
+
+      select * from b_commodity order by timenow desc limit 0,5
+
+
+
+    </select>
+    <insert id="insertCommodity" parameterType="blog.dao.Commodity">
+        insert into b_commodity (id, shopname, guige,
+        jiage, username, tupian, fenlei,timenow
+        )
+        values (#{id,jdbcType=INTEGER}, #{shopname,jdbcType=VARCHAR},
+        #{guige,jdbcType=VARCHAR},
+        #{jiage,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{tupian,jdbcType=VARCHAR},
+        #{fenlei,jdbcType=VARCHAR},now()
+        )
+    </insert>
+    <delete id="deleteCommodity" >
+        delete from b_commodity where id = #{_parameter,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="selecttop" resultType="blog.dto.output.Commoditynew">
+
+        select * from b_commodity
+
+
+        <if test="fenlei != null" >
+            where fenlei  like CONCAT(CONCAT('%',#{fenlei,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="num != null" >
+            order by timenow desc limit 0, #{num}
+        </if>
+
+    </select>
+
+
+</mapper>

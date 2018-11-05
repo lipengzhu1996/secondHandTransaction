@@ -1,0 +1,35 @@
+<!-- list -->
+<ul class="nav">
+  <!--<li class="hidden-folded padder m-t m-b-sm text-muted text-xs">-->
+    <!--<span translate="aside.nav.HEADER">sssss</span>-->
+  <!--</li>-->
+  <li ng-class="{active:$state.includes('app.table')}">
+    <a href class="auto">
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+      <!--<b class="label bg-primary pull-right">2</b>-->
+      <i class="glyphicon glyphicon-list"></i>
+      <span>管理系统</span>
+    </a>
+    <ul class="nav nav-sub dk">
+      <li class="nav-sub-header">
+        <a href>
+          <span>管理系统</span>
+        </a>
+      </li>
+      <li ui-sref-active="active">
+        <a ui-sref="app.table.grid">
+          <span>商品管理</span>
+        </a>
+      </li>
+      <li ui-sref-active="active">
+        <a ui-sref="app.table.static">
+          <span>新闻管理</span>
+        </a>
+      </li>
+    </ul>
+  </li>
+</ul>
+<!-- / list -->

@@ -1,0 +1,44 @@
+<div class="modal-header">
+    <h3 class="modal-title">商品添加</h3>
+</div>
+<div class="modal-body">
+    <form role="form">
+        <div class="form-group">
+            <label>商品名称</label>
+            <input type="text" ng-model="product.productName" class="form-control" placeholder="请输入商品名称">
+        </div>
+        <div class="form-group">
+            <label>商品分类</label>
+            <div>
+                <select ng-model="product.productCategory" name="account" class="form-control m-b">
+                    <option>衣服</option>
+                    <option>鞋</option>
+                    <option>裤子</option>
+                    <option>奢侈品</option>
+                    <option>电脑办公</option>
+                    <option>手机数码</option>
+                    <option>箱包手袋</option>
+                    <option>美妆护肤</option>
+                    <option>钟表珠宝</option>
+                    <option>家用电器</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>商品规格</label>
+            <input ng-model="product.productGuige" type="text" class="form-control" placeholder="请输入商品规格">
+        </div>
+        <div class="form-group">
+            <label>商品价格</label>
+            <input ng-model="product.productJiaGe" type="text" class="form-control" placeholder="请输入商品价格">
+        </div>
+        <div class="form-group">
+            <p class="m-t-md">商品图片</p>
+            <input ng-model="product.file" ng-change="imageChange(this)" type="file" id="fileInput" />
+        </div>
+    </form>
+</div>
+<div class="modal-footer">                  
+    <button class="btn btn-default" ng-click="cancel()">取消</button>
+    <button class="btn btn-primary" ng-click="add()">确认添加</button>
+</div>

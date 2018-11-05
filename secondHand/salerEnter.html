@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+        <meta name="author" content="order by dede58.com"/>
+		<title>卡莱尔二手交易商城</title>
+		<link rel="stylesheet" type="text/css" href="./css/style.css">
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="dist-bootstrap-table/bootstrap-table.min.css">
+	</head>
+	<body ng-app="myApp" ng-controller="myCtrl">
+	<!-- start header -->
+		<header>
+			<div class="top center">
+				<div class="left fl">
+					<ul>
+						<li><a href="">问题反馈</a></li>
+						<div class="clear"></div>
+					</ul>
+				</div>
+				<div class="right fr">
+					<div class="fr">
+						<ul>
+							<li><a ng-if="login=='登录/注册'" ng-click="toLogin()" target="_self">{{login}}</a></li>
+							<li><a ng-if="login!='登录/注册'" target="_self">{{login}}</a></li>
+							<li><a >|</a></li>
+							<li><a ng-if="login!='登录/注册'" ng-click="out()" target="_self">{{tuichu}}</a></li>
+						</ul>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</header>
+	<!--end header -->
+	<!-- start banner_x -->
+		<div style="height: 150px" class="banner_x center">
+			<div style="width: 900px; margin-left: 500px;margin-top: 50px;">
+				<h1>卡莱尔二手交易平台</h1>
+				<h2 style="margin-left: 90px;margin-top: 20px;">卖家入口</h2>
+			</div>
+		</div>
+<!-- end banner_x -->
+<!-- self_info -->
+	<div class="center" style="width:900px;height:460px;">
+		<div >
+			<div class="form-group">
+				<label>商品名称</label>
+				<input type="text" ng-model="product.productName" class="form-control" placeholder="请输入商品名称">
+			</div>
+			<div class="form-group">
+				<label>商品分类</label>
+				<div>
+					<select ng-model="product.productCategory" name="account" class="form-control m-b">
+						<option>衣服</option>
+						<option>鞋</option>
+						<option>裤子</option>
+						<option>奢侈品</option>
+						<option>电脑办公</option>
+						<option>手机数码</option>
+						<option>箱包手袋</option>
+						<option>美妆护肤</option>
+						<option>钟表珠宝</option>
+						<option>家用电器</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label>商品规格</label>
+				<input ng-model="product.productGuige" type="text" class="form-control" placeholder="请输入商品规格">
+			</div>
+			<div class="form-group">
+				<label>商品价格</label>
+				<input ng-model="product.productJiaGe" type="text" class="form-control" placeholder="请输入商品价格">
+			</div>
+			<div class="form-group">
+				<p class="m-t-md">商品图片</p>
+				<input onchange="angular.element(this).scope().change(this)" ng-model="product.file" ng-change="imageChange(this)" type="file" id="fileInput" />
+				<img id="fileImage" ng-src="{{product.file}}" alt="" style="width: 100px;height: 100px;">
+			</div>
+			<div style="align: center" class="form-group">
+				<button style="margin-left: 10%; width: 80%;" class="btn btn-lg btn-primary" ng-click="add()">确认提交</button>
+			</div>
+		</div>
+	</div>
+<!-- self_info -->
+
+	<footer class="mt20 center">
+		<div class="mt20">
+			友情链接：
+			<a style="text-decoration:underline;color: blue;" href="https://www.taobao.com/" alt="_blank">淘宝</a>
+			&nbsp;&nbsp;|&nbsp;&nbsp;
+			<a style="text-decoration:underline;color: blue;" href="https://www.amazon.cn/" alt="_blank">亚马逊</a></div>
+		<div style="font-size: 25px"> 卡莱尔二手交易网站</div>
+	</footer>
+	</body>
+</html>
+
+
+<script src="angular/angular.js"></script>
+<script src="dist/js/swiper.min.js"></script>
+<script src="jquery/jquery.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="dist-bootstrap-table/bootstrap-table.min.js"></script>
+<script src="dist-bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script>
+    var app = angular.module('myApp', []);
+
+    app.config(function ($httpProvider) {
+        $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+        $httpProvider.defaults.transformRequest = [function (data) {
+            /**
+             * The workhorse; converts an object to x-www-form-urlencoded serialization.
+             * @param {Object} obj
+             * @return {String}
+             */
+            var param = function (obj) {
+                var query = '';
+                var name, value, fullSubName, subName, subValue, innerObj, i;
+
+                for (name in obj) {
+                    value = obj[name];
+
+                    if (value instanceof Array) {
+                        for (i = 0; i < value.length; ++i) {
+                            subValue = value[i];
+                            fullSubName = name + '[' + i + ']';
+                            innerObj = {};
+                            innerObj[fullSubName] = subValue;
+                            query += param(innerObj) + '&';
+                        }
+                    } else if (value instanceof Object) {
+                        for (subName in value) {
+                            subValue = value[subName];
+                            fullSubName = name + '[' + subName + ']';
+                            innerObj = {};
+                            innerObj[fullSubName] = subValue;
+                            query += param(innerObj) + '&';
+                        }
+                    } else if (value !== undefined && value !== null) {
+                        query += encodeURIComponent(name) + '=' + encodeURIComponent(value) + '&';
+                    }
+                }
+
+                return query.length ? query.substr(0, query.length - 1) : query;
+            };
+
+            return angular.isObject(data) && String(data) !== '[object File]' ? param(data) : data;
+        }];
+    });
+
+    app.controller('myCtrl', function($scope,$http) {
+        $scope.tuichu = '退出登录';
+        $scope.newsArr = [];
+        $scope.sousuoStr = window.sessionStorage.getItem('sousuoStr');
+        $scope.shopname = window.sessionStorage.getItem('shopname');;
+        $scope.fenlei = [
+            {name: '鞋'},
+            {name: '衣服'},
+            {name: '裤子'},
+            {name: '奢侈品'},
+            {name: '电脑办公'},
+            {name: '手机数码'},
+            {name: '箱包手袋'},
+            {name: '美妆护肤'},
+            {name: '钟表珠宝'},
+            {name: '家用电器'}
+        ];
+
+        $scope.product = {
+            productName: '',
+            productCategory: '',
+            productGuige: '',
+            productJiaGe: '',
+            file: ''
+        };
+
+        if (window.localStorage.getItem('username')){
+            $scope.login = '用户名：' + window.localStorage.getItem('username');
+        }else{
+            $scope.login = '登录/注册';
+        }
+
+
+        $scope.change= function (input) {
+            var time = new Date().getTime();
+            console.log(input.files[0]);
+            var reader = new FileReader();
+            reader.readAsDataURL(input.files[0]);
+            reader.onload = function (evt) {
+                $scope.$apply(function () {
+                    $scope.product.file = evt.target.result;
+                });
+            }
+        }
+
+		$scope.add = function() {
+			console.log($scope.product);
+			var param = {
+				tupian: $scope.product.file,
+				shopname: $scope.product.productName,
+				guige: $scope.product.productGuige,
+				jiage: $scope.product.productJiaGe,
+				fenlei: $scope.product.productCategory,
+				username: window.localStorage.getItem('username')
+			}
+
+			$http({
+				method: 'POST',
+				url: 'http://192.168.1.118:8080/commodity/insert',
+				data: param,
+				headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}
+			}).success(function (data) {
+				console.log(data);
+				if (data.ErrorCode == 0){
+				    window.location.href='index.html';
+				}else {
+				    alert('上传失败');
+				}
+			}).error(function (data, header, config, status) {
+				console.log(data);
+			}) ;
+        };
+        $scope.toLogin = function () {
+            window.location.href = 'login.html';
+        }
+        $scope.out = function () {
+            window.localStorage.clear();
+            window.sessionStorage.clear();
+            window.location.href = 'login.html';
+        }
+    });
+</script>

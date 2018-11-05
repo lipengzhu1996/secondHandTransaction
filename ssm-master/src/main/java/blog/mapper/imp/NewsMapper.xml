@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="blog.mapper.NewsMapper">
+    <resultMap id="News" type="blog.dao.News">
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="biaoti" property="biaoti" jdbcType="VARCHAR" />
+        <result column="neirong" property="neirong" jdbcType="VARCHAR" />
+        <result column="chuangjianren" property="chuangjianren" jdbcType="INTEGER" />
+        <result column="riqi" property="riqi" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectNews" resultType="blog.dto.output.NewDetails"
+           >
+
+        select * from b_news
+        where 1=1
+        <if test=" biaoti != null" >
+        AND biaoti LIKE CONCAT(CONCAT('%',#{biaoti,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test=" chuangjianren != null" >
+            AND chuangjianren LIKE CONCAT(CONCAT('%',#{chuangjianren,jdbcType=VARCHAR}),'%')
+        </if>
+    </select>
+
+
+    <insert id="insertNews" parameterType="blog.dao.News">
+        insert into b_news (id, biaoti, neirong,
+        chuangjianren, riqi
+        )
+        values (#{id,jdbcType=INTEGER}, #{biaoti,jdbcType=VARCHAR},
+        #{neirong,jdbcType=VARCHAR},
+        #{chuangjianren,jdbcType=INTEGER}, now()   )
+    </insert>
+    <delete id="deleteNews" >
+        delete from b_news where id = #{_parameter,jdbcType=VARCHAR}
+    </delete>
+    <select id="selectoederAction" resultType="blog.dto.output.NewDetails">
+        select * from b_news order by riqi desc limit 0,5
+    </select>
+
+
+</mapper>

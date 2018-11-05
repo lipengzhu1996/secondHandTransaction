@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+        <meta name="author" content="order by dede58.com"/>
+		<title>小米手机列表</title>
+		<link rel="stylesheet" type="text/css" href="./css/style.css">
+	</head>
+	<body ng-app="myApp" ng-controller="myCtrl">
+	<!-- start header -->
+		<header>
+			<div class="top center">
+				<div class="left fl">
+					<ul>
+						<li><a href="">问题反馈</a></li>
+						<div class="clear"></div>
+					</ul>
+				</div>
+				<div class="right fr">
+					<div class="fr">
+						<ul>
+							<li><a ng-if="login=='登录/注册'" ng-click="toLogin()" target="_self">{{login}}</a></li>
+							<li><a ng-if="login!='登录/注册'" target="_self">{{login}}</a></li>
+							<li><a >|</a></li>
+							<li><a ng-if="login!='登录/注册'" ng-click="out()" target="_self">{{tuichu}}</a></li>
+						</ul>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</header>
+	<!--end header -->
+
+<!-- start banner_x -->
+		<div class="banner_x center">
+			<!--<a href=""><div class="ad_top fl"></div></a>-->
+			<div style="width: 900px; margin-left: 500px;margin-top: 50px;">
+				<h1>卡莱尔二手交易平台</h1>
+			</div>
+		</div>
+<!-- end banner_x -->
+
+	<!-- start banner_y -->
+	<!-- end banner -->
+
+	<!-- start danpin -->
+		<div class="danpin center" >
+			
+			<div class="biaoti center" style="margin-top: 20px;" ng-show="shopname==''||shopname==null||shopname=='null'">{{sousuoStr}}</div>
+			<div class="biaoti center" style="margin-top: 20px;" ng-show="sousuoStr==''||sousuoStr==null||sousuoStr=='null'">{{shopname}}</div>
+			<div class="main center">
+				<div ng-repeat="x in zuixinshangjia" class="mingxing fl mb20" style="margin-right: 10px;border:2px solid #fff;width:230px;cursor:pointer;" onmouseout="this.style.border='2px solid #fff'" onmousemove="this.style.border='2px solid red'">
+					<div class="sub_mingxing"><a href="" target="_blank"><img ng-src="{{x.tupian}}" alt=""></a></div>
+					<div class="pinpai"><a href="" target="_blank">{{x.shopname}}</a></div>
+					<div class="youhui">  </div>
+					<div class="jiage">{{x.jiage}}元</div>
+				</div>
+
+				<div class="clear"></div>
+			</div>
+			<!--<div class="main center mb20">-->
+				<!--<div ng-repeat="x in zuixinshangjia" class="mingxing fl">-->
+					<!--<div class="sub_mingxing"><a href=""><img ng-src="{{x.tupian}}" alt=""></a></div>-->
+					<!--<div class="pinpai"><a href="">{{x.shopname}}</a></div>-->
+					<!--<div class="youhui">  </div>-->
+					<!--<div class="jiage">{{x.jiage}}</div>-->
+				<!--</div>-->
+				<!---->
+				<!--<div class="clear"></div>-->
+			<!--</div>-->
+		</div>
+
+<!--<div class="mt20 center">-->
+	<!--<footer class="mt20 center">-->
+		<!--<div class="mt20">-->
+			<!--友情链接：-->
+			<!--<a style="text-decoration:underline;color: blue;" href="https://www.taobao.com/" alt="_blank">淘宝</a>-->
+			<!--&nbsp;&nbsp;|&nbsp;&nbsp;-->
+			<!--<a style="text-decoration:underline;color: blue;" href="https://www.amazon.cn/" alt="_blank">亚马逊</a></div>-->
+		<!--<div style="font-size: 25px"> 卡莱尔二手交易网站</div>-->
+	<!--</footer>-->
+
+<!--</div>-->
+
+	<!-- end danpin -->
+
+
+	</body>
+</html>
+
+<script src="angular/angular.js"></script>
+<script src="dist/js/swiper.min.js"></script>
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function($scope,$http) {
+        $scope.tuichu = '退出登录';
+        $scope.sousuoStr = window.sessionStorage.getItem('sousuoStr');
+        $scope.shopname = window.sessionStorage.getItem('shopname');;
+        $scope.fenlei = [
+            {name: '鞋'},
+            {name: '衣服'},
+            {name: '裤子'},
+            {name: '奢侈品'},
+            {name: '电脑办公'},
+            {name: '手机数码'},
+            {name: '箱包手袋'},
+            {name: '美妆护肤'},
+            {name: '钟表珠宝'},
+            {name: '家用电器'}
+        ];
+
+        if (window.localStorage.getItem('username')){
+            $scope.login = '用户名：' + window.localStorage.getItem('username');
+        }else{
+            $scope.login = '登录/注册';
+        }
+
+        if ($scope.shopname=='' || $scope.shopname=='null' || $scope.shopname==null){//按搜索字段查询
+            $http.get("http://192.168.1.118:8080/commodity/select",
+                {
+                    params: {
+                        shopname: $scope.sousuoStr
+                    }
+                })
+                .success(function (data, header, config, status) {
+                    console.log(data);
+                    if (data.ErrorCode == 0){
+                        console.log("查询成功");
+                        $scope.zuixinshangjia = data.Data;
+                    }else {
+                        console.log("查询失败");
+                    }
+                })
+                .error(function (data, header, config, status) {
+                    console.log(data);
+                }) ;
+        }else {//按名称查询
+            $http.get("http://192.168.1.118:8080/commodity/select",
+                {
+                    params: {
+                        fenlei: $scope.shopname
+                    }
+                })
+                .success(function (data, header, config, status) {
+                    console.log(data);
+                    if (data.ErrorCode == 0){
+                        console.log("查询成功");
+                        $scope.zuixinshangjia = data.Data;
+                    }else {
+                        console.log("查询失败");
+                    }
+                })
+                .error(function (data, header, config, status) {
+                    console.log(data);
+                }) ;
+		}
+        $scope.toLogin = function () {
+            window.location.href = 'login.html';
+        }
+        $scope.out = function () {
+            window.localStorage.clear();
+            window.sessionStorage.clear();
+            window.location.href = 'login.html';
+        }
+    });
+</script>
